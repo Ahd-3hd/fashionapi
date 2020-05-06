@@ -23,6 +23,15 @@ app.use(
     useTempFiles: true,
   })
 );
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 //1ns54xwgpy4p
 
 app.get("/products", (req, res) => {

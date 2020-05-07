@@ -42,7 +42,7 @@ app.get("/products", (req, res) => {
     .catch(console.error);
 });
 app.get("/store/:id", (req, res) => {
-  id = req.params.id;
+  id = req.params.id + 1;
   let data;
   console.log(id);
   client

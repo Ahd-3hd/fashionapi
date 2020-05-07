@@ -52,7 +52,7 @@ app.get("/store/:id", (req, res) => {
     .then((response) => {
       data = response.items;
       console.log(data);
-      return res.json(data[id]);
+      return res.send(data[id]);
     })
     .catch(console.error);
 });

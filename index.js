@@ -41,7 +41,7 @@ app.get("/products", (req, res) => {
     })
     .catch(console.error);
 });
-app.get("/store/:id", (req, res) => {
+app.get("/:id", (req, res) => {
   id = req.params.id;
   let data;
   client

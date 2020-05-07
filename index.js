@@ -51,7 +51,7 @@ app.get("/store/:id", (req, res) => {
     .then((environment) => environment.getEntries()) // you can add more queries as 'key': 'value'
     .then((response) => {
       data = response.items;
-      console.log(data[id].fields);
+      console.log(data);
       return res.send(data[id].fields);
     })
     .catch(console.error);

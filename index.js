@@ -41,6 +41,20 @@ app.get("/products", (req, res) => {
     })
     .catch(console.error);
 });
+app.get("/store/:id", (req, res) => {
+  id = req.params.id;
+  let data;
+  client
+    .getSpace("1ns54xwgpy4p")
+    .then((space) => space.getEnvironment("master"))
+    .then((environment) => environment.getEntries()) // you can add more queries as 'key': 'value'
+    .then((response) => {
+      data = response.items;
+      console.log(data[id].fields);
+      return res.send(data[id].fields);
+    })
+    .catch(console.error);
+});
 app.post("/create", (req, res) => {
   let total = 0;
   const file = req.files.photo;
@@ -107,4 +121,3 @@ app.post("/create", (req, res) => {
 app.listen(port, () =>
   console.log(`app listening at http://localhost:${port}`)
 );
-

@@ -70,7 +70,8 @@ app.post("/create", (req, res) => {
     .then((space) => space.getEnvironment("master"))
     .then((environment) => environment.getEntries())
     .then((res) => {
-      total = res.total + 1;
+      total = res.total;
+      total++;
     })
     .then(
       cloundinary.uploader.upload(file.tempFilePath, (err, result) => {

@@ -23,15 +23,6 @@ app.use(
     useTempFiles: true,
   })
 );
-
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
 //1ns54xwgpy4p
 
 app.get("/products", (req, res) => {
@@ -51,52 +42,69 @@ app.get("/products", (req, res) => {
     .catch(console.error);
 });
 app.post("/create", (req, res) => {
+  let total = 0;
   const file = req.files.photo;
   const title = req.body.title;
   const price = req.body.price;
   const desc = req.body.desc;
   const type = req.body.type;
+  const id = total;
   let imageUrl;
-  cloundinary.uploader.upload(file.tempFilePath, (err, result) => {
-    imageUrl = result.url;
-    client
-      .getSpace("1ns54xwgpy4p")
-      .then((space) => space.getEnvironment("master"))
-      .then((environment) =>
-        environment.createEntry("products", {
-          fields: {
-            title: {
-              "en-US": title,
-            },
-            price: {
-              "en-US": price.toString(),
-            },
-            imageurl: {
-              "en-US": imageUrl,
-            },
-            desc: {
-              "en-US": desc,
-            },
-            type: {
-              "en-US": type,
-            },
+  client
+    .getSpace("1ns54xwgpy4p")
+    .then((space) => space.getEnvironment("master"))
+    .then((environment) => environment.getEntries())
+    .then((res) => {
+      total = res.total + 1;
+    })
+    .then(
+      cloundinary.uploader.upload(file.tempFilePath, (err, result) => {
+        imageUrl = result.url;
+        client
+          .getSpace("1ns54xwgpy4p")
+          .then((space) => space.getEnvironment("master"))
+          .then((environment) => {
+            return environment.createEntry("products", {
+              fields: {
+                title: {
+                  "en-US": title,
+                },
+                price: {
+                  "en-US": price.toString(),
+                },
+                imageurl: {
+                  "en-US": imageUrl,
+                },
+                desc: {
+                  "en-US": desc,
+                },
+                type: {
+                  "en-US": type,
+                },
+                id: {
+                  "en-US": total,
+                },
+              },
+            });
+          })
+          .then((entry) => entry.publish())
+          .catch(console.error);
+        res.json({
+          success: "yep!",
+          product: {
+            total,
+            title,
+            price,
+            desc,
+            imageUrl,
           },
-        })
-      )
-      .then((entry) => entry.publish())
-      .catch(console.error);
-    res.json({
-      success: "yep!",
-      product: {
-        title,
-        price,
-        desc,
-        imageUrl,
-      },
-    });
-  });
+        });
+      })
+    )
+    .catch(console.log);
 });
 
 app.listen(port, () =>
   console.log(`app listening at http://localhost:${port}`)
 );
+

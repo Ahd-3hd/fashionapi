@@ -44,6 +44,7 @@ app.get("/products", (req, res) => {
 app.get("/store/:id", (req, res) => {
   id = req.params.id;
   let data;
+  console.log(id);
   client
     .getSpace("1ns54xwgpy4p")
     .then((space) => space.getEnvironment("master"))

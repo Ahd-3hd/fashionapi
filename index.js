@@ -48,11 +48,17 @@ app.get("/store/:id", (req, res) => {
   client
     .getSpace("1ns54xwgpy4p")
     .then((space) => space.getEnvironment("master"))
-    .then((environment) => environment.getEntries()) // you can add more queries as 'key': 'value'
+    .then((environment) =>
+      environment.getEntries({
+        content_type: "products",
+        "fields.id": id,
+      })
+    ) // you can add more queries as 'key': 'value'
     .then((response) => {
-      data = response.items;
-      console.log(data);
-      return res.send(data[id - 1].fields);
+      return res.send(response.items[0].fields);
+      // data = response.items;
+      // console.log(data);
+      // return res.send(data[id - 1].fields);
     })
     .catch(console.error);
 });
@@ -63,7 +69,6 @@ app.post("/create", (req, res) => {
   const price = req.body.price;
   const desc = req.body.desc;
   const type = req.body.type;
-  const id = total;
   let imageUrl;
   client
     .getSpace("1ns54xwgpy4p")
@@ -103,7 +108,9 @@ app.post("/create", (req, res) => {
               },
             });
           })
-          .then((entry) => entry.publish())
+          .then((entry) => {
+            return entry.publish();
+          })
           .catch(console.error);
         res.json({
           success: "yep!",

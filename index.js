@@ -42,7 +42,7 @@ app.get("/products", (req, res) => {
     .catch(console.error);
 });
 app.get("/store/:id", (req, res) => {
-  id = req.params.id + 1;
+  id = req.params.id;
   let data;
   console.log(id);
   client
@@ -51,7 +51,8 @@ app.get("/store/:id", (req, res) => {
     .then((environment) => environment.getEntries()) // you can add more queries as 'key': 'value'
     .then((response) => {
       data = response.items;
-      return res.send(data[id].fields);
+      console.log(data);
+      return res.send(data[id - 1].fields);
     })
     .catch(console.error);
 });

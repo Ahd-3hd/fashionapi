@@ -112,6 +112,8 @@ app.post("/create", (req, res) => {
   const price = req.body.price;
   const desc = req.body.desc;
   const type = req.body.type;
+  const likes = 0;
+  const views = 0;
   let imageUrl;
   client
     .getSpace("1ns54xwgpy4p")
@@ -148,6 +150,12 @@ app.post("/create", (req, res) => {
                 id: {
                   "en-US": total,
                 },
+                likes: {
+                  "en-US": likes,
+                },
+                views: {
+                  "en-US": likes,
+                },
               },
             });
           })
@@ -163,6 +171,8 @@ app.post("/create", (req, res) => {
             price,
             desc,
             imageUrl,
+            likes,
+            views,
           },
         });
       })

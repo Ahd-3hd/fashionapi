@@ -41,6 +41,49 @@ app.get("/products", (req, res) => {
     })
     .catch(console.error);
 });
+
+app.put("/like/:id", (req, res) => {
+  let id = req.params.id;
+  client
+    .getSpace("1ns54xwgpy4p")
+    .then((space) => space.getEnvironment("master"))
+    .then((environment) =>
+      environment.getEntries({
+        content_type: "products",
+        "fields.id": id,
+      })
+    )
+    .then((entry) => {
+      console.log(entry.items[0].fields);
+
+      entry.items[0].fields.likes["en-US"] += 1;
+      return entry.items[0].update();
+    })
+    .then((_) => res.send("done"))
+    .catch((e) => console.log(e));
+});
+
+app.put("/view/:id", (req, res) => {
+  let id = req.params.id;
+  client
+    .getSpace("1ns54xwgpy4p")
+    .then((space) => space.getEnvironment("master"))
+    .then((environment) =>
+      environment.getEntries({
+        content_type: "products",
+        "fields.id": id,
+      })
+    )
+    .then((entry) => {
+      console.log(entry.items[0].fields);
+
+      entry.items[0].fields.views["en-US"] += 1;
+      return entry.items[0].update();
+    })
+    .then((_) => res.send("done"))
+    .catch((e) => console.log(e));
+});
+
 app.get("/store/:id", (req, res) => {
   id = req.params.id;
   let data;
